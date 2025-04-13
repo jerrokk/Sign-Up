@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Invoice Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      text-align: center;
+    }
+    form div {
+      margin-bottom: 10px;
+    }
+    input, button {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+    #receipt-msg {
+      display: none;
+      margin-top: 15px;
+      color: green;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Invoice Generator</h1>
+
+  <form id="invoice-form">
+    <div>
+      <input type="text" id="customer-name" placeholder="Customer Name" required />
+    </div>
+    <div>
+      <input type="text" id="item" placeholder="Item" required />
+    </div>
+    <div>
+      <input type="number" id="quantity" placeholder="Quantity" required />
+    </div>
+    <div>
+      <input type="number" id="price" placeholder="Unit Price" required />
+    </div>
+    <button type="submit" id="generate-invoice-btn">Generate Invoice</button>
+  </form>
+
+  <p id="receipt-msg"></p>
+
+  <script>
+    document.getElementById("generate-invoice-btn").addEventListener("click", function (e) {
+      e.preventDefault();
+
+      const customerName = document.getElementById("customer-name").value.trim();
+      const item = document.getElementById("item").value.trim();
+      const quantity = parseInt(document.getElementById("quantity").value);
+      const price = parseFloat(document.getElementById("price").value);
+
+      if (!customerName || !item || isNaN(quantity) || isNaN(price)) {
+        alert("Please fill in all invoice fields.");
+        return;
+      }
+
+      const total = quantity * price;
+
+      const invoice = {
+        id: Date.now(),
+        customerName,
+        item,
+        quantity,
+        price,
+        total,
+        date: new Date().toLocaleString(),
+      };
+
+      let invoices = JSON.parse(localStorage.getItem("invoices")) || [];
+      invoices.push(invoice);
+      localStorage.setItem("invoices", JSON.stringify(invoices));
+
+      const receipt = document.getElementById("receipt-msg");
+      receipt.textContent = `Receipt sent to ${customerName} for $${total.toFixed(2)}.`;
+      receipt.style.display = "block";
+
+      document.getElementById("invoice-form").reset();
+    });
+  </script>
+
+</body>
+</html>
