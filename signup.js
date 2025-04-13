@@ -8,7 +8,6 @@ document.getElementById("signup-form").addEventListener("submit", function (e) {
     const password = document.getElementById("password-input").value;
     const repeatPassword = document.getElementById("repeat-password-input").value;
 
-    // === VALIDATION ===
     const trnRegex = /^\d{9}$/;
     if (!trnRegex.test(trn)) {
         alert("TRN must be exactly 9 digits.");
@@ -25,19 +24,16 @@ document.getElementById("signup-form").addEventListener("submit", function (e) {
         return;
     }
 
-    // === PREPARE USER OBJECT ===
     const user = {
         firstName,
         email,
         trn,
         age,
-        password // You might hash this in real apps!
+        password
     };
 
-    // === LOCALSTORAGE HANDLING ===
     let users = JSON.parse(localStorage.getItem("registeredUsers")) || [];
 
-    // Check for duplicate TRN
     const duplicate = users.some(u => u.trn === trn);
     if (duplicate) {
         alert("A user with this TRN already exists.");
